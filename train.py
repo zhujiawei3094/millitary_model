@@ -1,5 +1,3 @@
-!pip install ultralytics
-
 from ultralytics import YOLO
 import os
 
