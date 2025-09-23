@@ -9,7 +9,7 @@ print("dir right")
 
 model.train(
     data = "/kaggle/input/military-assets-dataset-12-classes-yolo8-format/military_object_dataset/military_dataset.yaml",
-    epochs = 2,
+    epochs = 120,
     batch = 100,
     imgsz = 640,
 )
