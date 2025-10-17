@@ -427,6 +427,15 @@ class BaseTrainer:
 
                 # Backward
                 self.scaler.scale(self.loss).backward()
+
+                # prune add
+                # l1_lambda = 1e-2 * (1 - 0.9 * epoch / self.epochs)
+                # for k, m in self.model.named_modules():
+                #     if isinstance(m, nn.BatchNorm2d):
+                #         m.weight.grad.data.add_(l1_lambda * torch.sign(m.weight.data))
+                #         m.bias.grad.data.add_(1e-2 * torch.sign(m.bias.data))
+
+
                 if ni - last_opt_step >= self.accumulate:
                     self.optimizer_step()
                     last_opt_step = ni
@@ -671,6 +680,10 @@ class BaseTrainer:
         elif isinstance(self.args.pretrained, (str, Path)):
             weights, _ = load_checkpoint(self.args.pretrained)
         self.model = self.get_model(cfg=cfg, weights=weights, verbose=RANK == -1)  # calls Model(cfg, weights)
+
+        # prune add : 2nd train
+        self.model = weights
+
         return ckpt
 
     def optimizer_step(self):

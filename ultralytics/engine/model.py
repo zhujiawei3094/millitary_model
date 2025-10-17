@@ -795,7 +795,19 @@ class Model(torch.nn.Module):
         self.trainer = (trainer or self._smart_load("trainer"))(overrides=args, _callbacks=self.callbacks)
         if not args.get("resume"):  # manually set model only if not resuming
             self.trainer.model = self.trainer.get_model(weights=self.model if self.ckpt else None, cfg=self.model.yaml)
-            self.model = self.trainer.model
+            
+            # ultralytics/engine/model.py 中实现自定义结构模型加载  
+            
+            print("-----------------------------------")
+            print(f"\033[1;32mINFO\033[0m: custom_model is True, load custom model. ")
+            for name, param in self.model.named_parameters():
+                if "dfl" in name:
+                    param.requires_grad = False  # 冻结
+                else:
+                    param.requires_grad = True  # 解冻其他层
+                self.trainer.model.model = self.model.model
+            
+            # self.model = self.trainer.model
 
         self.trainer.train()
         # Update model and cfg after training
