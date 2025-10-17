@@ -797,7 +797,7 @@ class Model(torch.nn.Module):
             self.trainer.model = self.trainer.get_model(weights=self.model if self.ckpt else None, cfg=self.model.yaml)
             
             # ultralytics/engine/model.py 中实现自定义结构模型加载  
-            
+            # prune add 2nd train
             print("-----------------------------------")
             print(f"\033[1;32mINFO\033[0m: custom_model is True, load custom model. ")
             for name, param in self.model.named_parameters():
